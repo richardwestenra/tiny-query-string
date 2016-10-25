@@ -19,9 +19,9 @@
   };
 
   return {
-    get: function(name, query) {
-      query = query || window.location.search;
-      var match = query.match( regex(name) );
+    get: function(name, text) {
+      text = text || window.location.search;
+      var match = text.match( regex(name) );
       if (!match) {
         return false;
       } else if (match[2]) {
@@ -31,27 +31,27 @@
       }
     },
 
-    set: function(name, value, query) {
-      query = query || window.location.search;
+    set: function(name, value, text) {
+      text = text || window.location.search;
       var regex = regex(name),
-      match = regex.exec(query),
+      match = regex.exec(text),
       pair = value ? name + '=' + encodeURIComponent(value) : name;
 
-      if (!query.length || query.indexOf('?') < 0) {
+      if (!text.length || text.indexOf('?') < 0) {
         // If there are no existing queries then create new one:
-        return (query || '') + '?' + pair;
+        return (text || '') + '?' + pair;
       } else if (match) {
         // If there is an existing query for this name then update the value:
-        return query.replace(regex, match[0].charAt(0) + pair);
+        return text.replace(regex, match[0].charAt(0) + pair);
       } else {
         // If there are existing queries but not for this name then add it to the end:
-        return query + '&' + pair;
+        return text + '&' + pair;
       }
     },
 
-    remove: function(name, query) {
-      query = query || window.location.search;
-      return query.replace(regex(name), '');
+    remove: function(name, text) {
+      text = text || window.location.search;
+      return text.replace(regex(name), '');
     }
   };
 }));
