@@ -31,6 +31,12 @@
       }
     },
 
+    getMany: function(arr, text) {
+      return arr.map(function(d) {
+        return this.get(d, text);
+      }.bind(this));
+    },
+
     set: function(name, value, text) {
       text = text || window.location.search;
       var regex = regex(name),
@@ -47,6 +53,12 @@
         // If there are existing queries but not for this name then add it to the end:
         return text + '&' + pair;
       }
+    },
+
+    setMany: function(arr, text) {
+      return arr.reduce(function(text, d) {
+        return this.set(d.name, d.value, text);
+      }.bind(this), text);
     },
 
     remove: function(name, text) {
