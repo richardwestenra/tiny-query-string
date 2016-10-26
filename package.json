@@ -4,7 +4,7 @@
   "description": "A really tiny URL query string utility",
   "main": "tinyQuery.js",
   "scripts": {
-    "test": "node test.js"
+    "test": "./node_modules/.bin/mocha test.js"
   },
   "repository": {
     "type": "git",
@@ -25,5 +25,9 @@
   "bugs": {
     "url": "https://github.com/richardwestenra/tiny-query-string/issues"
   },
-  "homepage": "http://richardwestenra.com/tiny-query-string/"
+  "homepage": "http://richardwestenra.com/tiny-query-string/",
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "mocha": "^3.1.2"
+  }
 }

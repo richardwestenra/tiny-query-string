@@ -1,4 +1,4 @@
-// TinyQueryString - A really small URL query strin utility
+// TinyQueryString - A really tiny URL query string utility
 // author : Richard Westenra
 // license : MIT
 // richardwestenra.com/tiny-query-string
