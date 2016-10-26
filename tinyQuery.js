@@ -7,11 +7,11 @@
   if (typeof define === 'function' && define.amd) {
     define(['tinyQuery'], factory);
   } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('tinyQuery'));
+    module.exports = factory();
   } else {
-    root.returnExports = factory(root.tinyQuery);
+    root.tinyQuery = factory();
   }
-}(this, function (tinyQuery) {
+}(this, function (undefined) {
   'use strict';
 
   var regex = function(name) {
