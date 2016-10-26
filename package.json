@@ -1,0 +1,29 @@
+{
+  "name": "tiny-query-string",
+  "version": "0.0.1",
+  "description": "A really tiny URL query string utility",
+  "main": "tinyQuery.js",
+  "scripts": {
+    "test": "node test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/richardwestenra/tiny-query-string.git"
+  },
+  "keywords": [
+    "query string",
+    "tiny",
+    "query",
+    "string"
+  ],
+  "author": {
+    "name": "Richard Westenra",
+    "email": "richard@richardwestenra.com",
+    "url": "http://richardwestenra.com/"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/richardwestenra/tiny-query-string/issues"
+  },
+  "homepage": "http://richardwestenra.com/tiny-query-string/"
+}
