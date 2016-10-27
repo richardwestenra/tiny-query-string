@@ -25,7 +25,17 @@
   };
 
   return {
-    get: function(name, text) {
+    get: function() {
+      if (arguments.length === 1) {
+        return this.getAll.apply(this, arguments);
+      } else if (typeof arguments[0] === 'object') {
+        return this.getMany.apply(this, arguments);
+      } else {
+        return this.getOne.apply(this, arguments);
+      }
+    },
+
+    getOne: function(name, text) {
       var match = setDefault(text).match( getRegex(name) );
       if (!match) {
         return false;
@@ -53,7 +63,13 @@
       });
     },
 
-    set: function(name, value, text) {
+    set: function() {
+      return  (typeof arguments[0] === 'object') ? 
+        this.setMany.apply(this, arguments) :
+        this.setOne.apply(this, arguments);
+    },
+
+    setOne: function(name, value, text) {
       text = setDefault(text);
       var regex = getRegex(name),
         match = regex.exec(text),
@@ -71,8 +87,8 @@
     setMany: function(arr, text) {
       return arr.reduce(function(txt, d) {
         return typeof d === 'object' ? 
-          this.set(d.name, d.value, txt) :
-          this.set(d, false, txt);
+          this.setOne(d.name, d.value, txt) :
+          this.setOne(d, false, txt);
       }.bind(this), setDefault(text));
     },
 

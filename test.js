@@ -5,36 +5,36 @@ const encodedString = 'http%3A%2F%2Fwww.example.com%2Fpage%2F%3Ff%C3%B6o%3Dbar%2
 const decodedString = 'http://www.example.com/page/?föo=bar ïs á prétty cööl wēbsite!';
 
 describe('TinyQueryString', function(){
-	
-	describe('get', function(){
+
+	describe('getOne', function(){
 		it('should retrieve a named value from a query string', function() {
-			expect(qs.get('foo', '?foo=bar')).to.equal('bar');
-			expect(qs.get('foo', '?bar=foo')).to.not.be.true;
-			expect(qs.get('foo', '?foo=bar&baz=qux')).to.equal('bar');
-			expect(qs.get('foo', '?baz=qux&foo=bar')).to.equal('bar');
-			expect(qs.get('foo', 'http://example.com/page/?foo=bar&baz=qux')).to.equal('bar');
-			expect(qs.get('foo', 'http://www.example.com/page/?foo=bar&baz=qux')).to.equal('bar');
-			expect(qs.get('foo', 'http://www.example.com?foo=bar&baz=qux')).to.equal('bar');
-			expect(qs.get('foo', 'example.com?foo=bar')).to.equal('bar');
+			expect(qs.getOne('foo', '?foo=bar')).to.equal('bar');
+			expect(qs.getOne('foo', '?bar=foo')).to.not.be.true;
+			expect(qs.getOne('foo', '?foo=bar&baz=qux')).to.equal('bar');
+			expect(qs.getOne('foo', '?baz=qux&foo=bar')).to.equal('bar');
+			expect(qs.getOne('foo', 'http://example.com/page/?foo=bar&baz=qux')).to.equal('bar');
+			expect(qs.getOne('foo', 'http://www.example.com/page/?foo=bar&baz=qux')).to.equal('bar');
+			expect(qs.getOne('foo', 'http://www.example.com?foo=bar&baz=qux')).to.equal('bar');
+			expect(qs.getOne('foo', 'example.com?foo=bar')).to.equal('bar');
 		});
 		
 		it('should confirm whether a key is present in a query string', function() {
-			expect(qs.get('foo', '?foo')).to.be.true;
-			expect(qs.get('foo', '?bar')).to.not.be.true;
-			expect(qs.get('foo', 'http://www.example.com/page/?foo')).to.be.true;
-			expect(qs.get('foo', 'http://www.example.com/page/?bar')).to.not.be.true;
-			expect(qs.get('foo', '?foo&bar')).to.be.true;
-			expect(qs.get('foo', '?foo&bar=baz')).to.be.true;
-			expect(qs.get('foo', '?bar&baz')).to.not.be.true;
+			expect(qs.getOne('foo', '?foo')).to.be.true;
+			expect(qs.getOne('foo', '?bar')).to.not.be.true;
+			expect(qs.getOne('foo', 'http://www.example.com/page/?foo')).to.be.true;
+			expect(qs.getOne('foo', 'http://www.example.com/page/?bar')).to.not.be.true;
+			expect(qs.getOne('foo', '?foo&bar')).to.be.true;
+			expect(qs.getOne('foo', '?foo&bar=baz')).to.be.true;
+			expect(qs.getOne('foo', '?bar&baz')).to.not.be.true;
 		});
 
 		it('should be case-insensitive', function() {
-			expect(qs.get('FOO', '?foo=bar')).to.equal('bar');
-			expect(qs.get('foo', '?FOO=bar')).to.equal('bar');
+			expect(qs.getOne('FOO', '?foo=bar')).to.equal('bar');
+			expect(qs.getOne('foo', '?FOO=bar')).to.equal('bar');
 		});
 
 		it('should decode escape URI components', function() {
-			expect(qs.get('foo', '?foo=' + encodedString)).to.equal(decodedString);
+			expect(qs.getOne('foo', '?foo=' + encodedString)).to.equal(decodedString);
 		});
 	});
 
@@ -82,31 +82,51 @@ describe('TinyQueryString', function(){
 	});
 
 
-	describe('set', function(){
+	describe('get', function(){
+		it('should behave the same as getOne', function() {
+			expect(qs.get('foo', '?foo=bar')).to.equal(qs.getOne('foo', '?foo=bar'));
+		});
+		
+		it('should behave the same as getMany', function() {
+			expect(qs.get(['foo'], '?foo')).to.deep.equal(qs.getMany(['foo'], '?foo'));
+			expect(qs.get(['foo','bar'], '?foo&bar')).to.deep.equal(qs.getMany(['foo','bar'], '?foo&bar'));
+			expect(qs.get(['foo','bar'], '?foo=bar&baz=qux')).to.deep.equal(qs.getMany(['foo','bar'], '?foo=bar&baz=qux'));
+		});
+
+		it('should behave the same as getAll', function() {
+			expect(qs.get('')).to.deep.equal(qs.getAll(''));
+			expect(qs.get('?foo&bar')).to.deep.equal(qs.getAll('?foo&bar'));
+			expect(qs.get('?foo=bar&baz=qux')).to.deep.equal(qs.getAll('?foo=bar&baz=qux'));
+			expect(qs.getMany(['foo', 'baz'], '?foo=bar&baz=qux')[0]).to.equal('bar');
+		});
+	});
+
+
+	describe('setOne', function(){
 		it('should add a single key when none exists', function() {
-			expect(qs.set('foo', 'bar', '')).to.equal('?foo=bar');
-			expect(qs.set('foo', 'bar')).to.equal('?foo=bar');
-			expect(qs.set('foo', 123, '')).to.equal('?foo=123');
-			expect(qs.set('foo', 'BAR', '')).to.equal('?foo=BAR');
-			expect(qs.set('foo', 'bar', '/')).to.equal('/?foo=bar');
-			expect(qs.set('foo', 'bar', 'http://www.example.com/')).to.equal('http://www.example.com/?foo=bar');
+			expect(qs.setOne('foo', 'bar', '')).to.equal('?foo=bar');
+			expect(qs.setOne('foo', 'bar')).to.equal('?foo=bar');
+			expect(qs.setOne('foo', 123, '')).to.equal('?foo=123');
+			expect(qs.setOne('foo', 'BAR', '')).to.equal('?foo=BAR');
+			expect(qs.setOne('foo', 'bar', '/')).to.equal('/?foo=bar');
+			expect(qs.setOne('foo', 'bar', 'http://www.example.com/')).to.equal('http://www.example.com/?foo=bar');
 		});
 
 		it('should add just the key name when the value is falsey', function() {
-			expect(qs.set('foo', null, '')).to.equal('?foo');
-			expect(qs.set('foo', false, '')).to.equal('?foo');
-			expect(qs.set('foo', '', '')).to.equal('?foo');
-			expect(qs.set('foo', undefined, '')).to.equal('?foo');
-			expect(qs.set('foo', NaN, '')).to.equal('?foo');
-			expect(qs.set('foo', 0, '')).to.equal('?foo');
-			expect(qs.set(123, false, '')).to.equal('?123');
-			expect(qs.set(true, false, '')).to.equal('?true');
-			expect(qs.set(0, false, '')).to.equal('?0');
-			expect(qs.set(Infinity, false, '')).to.equal('?Infinity');
+			expect(qs.setOne('foo', null, '')).to.equal('?foo');
+			expect(qs.setOne('foo', false, '')).to.equal('?foo');
+			expect(qs.setOne('foo', '', '')).to.equal('?foo');
+			expect(qs.setOne('foo', undefined, '')).to.equal('?foo');
+			expect(qs.setOne('foo', NaN, '')).to.equal('?foo');
+			expect(qs.setOne('foo', 0, '')).to.equal('?foo');
+			expect(qs.setOne(123, false, '')).to.equal('?123');
+			expect(qs.setOne(true, false, '')).to.equal('?true');
+			expect(qs.setOne(0, false, '')).to.equal('?0');
+			expect(qs.setOne(Infinity, false, '')).to.equal('?Infinity');
 		});
 
 		it('should encode special characters', function() {
-			expect(qs.set('foo', decodedString, '')).to.equal('?foo=' + encodedString);
+			expect(qs.setOne('foo', decodedString, '')).to.equal('?foo=' + encodedString);
 		});
 	});
 
@@ -134,6 +154,24 @@ describe('TinyQueryString', function(){
 				'http://www.example.com/?corge=waldo'
 			)).to.equal('http://www.example.com/?corge=waldo&foo=bar&baz=qux');
 			expect(qs.setMany(['foo', 'bar'], '?baz&qux')).to.equal('?baz&qux&foo&bar');
+		});
+	});
+
+
+	describe('set', function(){
+		it('should behave the same as setOne', function() {
+			expect(qs.set('foo', 'bar', '')).to.equal(qs.setOne('foo', 'bar', ''));
+			expect(qs.set('foo', false, '')).to.equal(qs.setOne('foo', false, ''));
+		});
+		
+		it('should behave the same as setMany', function() {
+			expect(qs.set(['foo'], '')).to.equal(qs.setMany(['foo'], ''));
+			expect(qs.set(['foo','bar'], '')).to.equal(qs.setMany(['foo','bar'], ''));
+			expect(
+				qs.setMany([ {name:'foo', value:'bar'}, {name:'baz', value:'qux'} ], '')
+			).to.equal(
+				qs.setMany([ {name:'foo', value:'bar'}, {name:'baz', value:'qux'} ], '')
+			);
 		});
 	});
 
