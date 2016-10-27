@@ -11,16 +11,16 @@
   } else {
     root.tinyQuery = factory();
   }
-}(this, function (undefined) {
+}(this, function () {
   'use strict';
 
   var getRegex = function(name) {
-    return new RegExp('[\\?&](' + name + ')=?([^&#]*)', 'i');
+    return new RegExp('[\?&](' + name + ')=?([^&#]*)', 'i');
   };
 
   var setDefault = function(text) {
     return typeof text === 'undefined' ? (
-      window ? window.location.search : ''
+      typeof window === 'undefined' ? '' : window.location.search
     ) : text;
   };
 
@@ -42,32 +42,51 @@
       }.bind(this));
     },
 
+    getAll: function(text) {
+      text = setDefault(text).match(/\?(.+)/);
+      if (!text) {
+        return [];
+      }
+      return text[1].split('&').map(function(d) {
+        var s = d.split('=');
+        return s.length < 2 ? d : { name: s[0], value: s[1] };
+      });
+    },
+
     set: function(name, value, text) {
       text = setDefault(text);
       var regex = getRegex(name),
-      match = regex.exec(text),
-      pair = value ? name + '=' + encodeURIComponent(value) : name;
+        match = regex.exec(text),
+        pair = value ? name + '=' + encodeURIComponent(value) : name;
 
       if (!text.length || text.indexOf('?') < 0) {
-        // If there are no existing queries then create new one:
         return (text || '') + '?' + pair;
       } else if (match) {
-        // If there is an existing query for this name then update the value:
         return text.replace(regex, match[0].charAt(0) + pair);
       } else {
-        // If there are existing queries but not for this name then add it to the end:
         return text + '&' + pair;
       }
     },
 
     setMany: function(arr, text) {
       return arr.reduce(function(txt, d) {
-        return this.set(d.name, d.value, txt);
+        return typeof d === 'object' ? 
+          this.set(d.name, d.value, txt) :
+          this.set(d, false, txt);
       }.bind(this), setDefault(text));
     },
 
     remove: function(name, text) {
-      return setDefault(text).replace(getRegex(name), '');
+      text = setDefault(text).match(/([^\?]*)(\?*.*)/);
+      if (!text) {
+        return false;
+      } else if (!text[2].length) {
+        return text[1];
+      } else {
+        return this.setMany(this.getAll(text[2]).filter(function(d){
+          return d !== name && d.name !== name;
+        }), text[1]);
+      }
     }
   };
 }));
