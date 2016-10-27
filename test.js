@@ -42,4 +42,9 @@ describe('TinyQueryString', function(){
 		expect(qs.getMany(['foo', 'bar'], '?foo&bar')[1]).to.equal(true);
 		expect(qs.getMany(['foo', 'bar'], '?foo&baz')[1]).to.equal(false);
 	});
+
+	it('should be case-insensitive', function() {
+		expect(qs.get('FOO', '?foo=bar')).to.equal('bar');
+		expect(qs.get('foo', '?FOO=bar')).to.equal('bar');
+	});
 });

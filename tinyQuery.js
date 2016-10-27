@@ -15,7 +15,7 @@
   'use strict';
 
   var regex = function(name) {
-    return new RegExp('[\\?&](' + name + ')=?([^&#]*)');
+    return new RegExp('[\\?&](' + name + ')=?([^&#]*)', 'i');
   };
 
   return {
