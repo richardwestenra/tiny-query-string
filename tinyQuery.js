@@ -14,14 +14,19 @@
 }(this, function (undefined) {
   'use strict';
 
-  var regex = function(name) {
+  var getRegex = function(name) {
     return new RegExp('[\\?&](' + name + ')=?([^&#]*)', 'i');
+  };
+
+  var setDefault = function(text) {
+    return typeof text === 'undefined' ? (
+      window ? window.location.search : ''
+    ) : text;
   };
 
   return {
     get: function(name, text) {
-      text = text || window.location.search;
-      var match = text.match( regex(name) );
+      var match = setDefault(text).match( getRegex(name) );
       if (!match) {
         return false;
       } else if (match[2]) {
@@ -32,15 +37,14 @@
     },
 
     getMany: function(arr, text) {
-      text = text || window.location.search;
       return arr.map(function(d) {
-        return this.get(d, text);
+        return this.get(d, setDefault(text));
       }.bind(this));
     },
 
     set: function(name, value, text) {
-      text = text || window.location.search;
-      var regex = regex(name),
+      text = setDefault(text);
+      var regex = getRegex(name),
       match = regex.exec(text),
       pair = value ? name + '=' + encodeURIComponent(value) : name;
 
@@ -57,15 +61,13 @@
     },
 
     setMany: function(arr, text) {
-      text = text || window.location.search;
-      return arr.reduce(function(text, d) {
-        return this.set(d.name, d.value, text);
-      }.bind(this), text);
+      return arr.reduce(function(txt, d) {
+        return this.set(d.name, d.value, txt);
+      }.bind(this), setDefault(text));
     },
 
     remove: function(name, text) {
-      text = text || window.location.search;
-      return text.replace(regex(name), '');
+      return setDefault(text).replace(getRegex(name), '');
     }
   };
 }));
