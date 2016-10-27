@@ -26,10 +26,10 @@
 
   return {
     get: function() {
-      if (arguments.length === 1) {
-        return this.getAll.apply(this, arguments);
-      } else if (typeof arguments[0] === 'object') {
+      if (typeof arguments[0] === 'object') {
         return this.getMany.apply(this, arguments);
+      } else if (arguments[1] === false) {
+        return this.getAll.apply(this, arguments);
       } else {
         return this.getOne.apply(this, arguments);
       }
@@ -48,7 +48,7 @@
 
     getMany: function(arr, text) {
       return arr.map(function(d) {
-        return this.get(d, setDefault(text));
+        return this.getOne(d, setDefault(text));
       }.bind(this));
     },
 
@@ -93,10 +93,10 @@
     },
 
     remove: function() {
-      if (arguments.length === 1) {
-        return this.removeAll.apply(this, arguments);
-      } else if (typeof arguments[0] === 'object') {
+      if (typeof arguments[0] === 'object') {
         return this.removeMany.apply(this, arguments);
+      } else if (arguments[1] === false) {
+        return this.removeAll.apply(this, arguments);
       } else {
         return this.removeOne.apply(this, arguments);
       }

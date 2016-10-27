@@ -84,19 +84,22 @@ describe('TinyQueryString', function(){
 
 	describe('get', function(){
 		it('should behave the same as getOne', function() {
+			expect(qs.get('foo')).to.equal(qs.getOne('foo'));
+			expect(qs.get('foo', '?foo')).to.equal(qs.getOne('foo', '?foo'));
 			expect(qs.get('foo', '?foo=bar')).to.equal(qs.getOne('foo', '?foo=bar'));
 		});
 		
 		it('should behave the same as getMany', function() {
+			expect(qs.get(['foo'])).to.deep.equal(qs.getMany(['foo']));
 			expect(qs.get(['foo'], '?foo')).to.deep.equal(qs.getMany(['foo'], '?foo'));
 			expect(qs.get(['foo','bar'], '?foo&bar')).to.deep.equal(qs.getMany(['foo','bar'], '?foo&bar'));
 			expect(qs.get(['foo','bar'], '?foo=bar&baz=qux')).to.deep.equal(qs.getMany(['foo','bar'], '?foo=bar&baz=qux'));
 		});
 
 		it('should behave the same as getAll', function() {
-			expect(qs.get('')).to.deep.equal(qs.getAll(''));
-			expect(qs.get('?foo&bar')).to.deep.equal(qs.getAll('?foo&bar'));
-			expect(qs.get('?foo=bar&baz=qux')).to.deep.equal(qs.getAll('?foo=bar&baz=qux'));
+			expect(qs.get('', false)).to.deep.equal(qs.getAll(''));
+			expect(qs.get('?foo&bar', false)).to.deep.equal(qs.getAll('?foo&bar'));
+			expect(qs.get('?foo=bar&baz=qux', false)).to.deep.equal(qs.getAll('?foo=bar&baz=qux'));
 		});
 	});
 
@@ -177,50 +180,50 @@ describe('TinyQueryString', function(){
 
 	describe('removeOne', function(){
 		it('should remove a keys and its values from a query string', function() {
-			expect(qs.remove('foo', '?foo=bar')).to.equal('');
-			expect(qs.remove('foo', '?foo&bar')).to.equal('?bar');
-			expect(qs.remove('foo', '?bar&foo')).to.equal('?bar');
-			expect(qs.remove('foo', 'http://www.example.com/?bar&foo')).to.equal('http://www.example.com/?bar');
-			expect(qs.remove('foo', 'http://www.example.com/?foo&bar')).to.equal('http://www.example.com/?bar');
+			expect(qs.removeOne('foo', '?foo=bar')).to.equal('');
+			expect(qs.removeOne('foo', '?foo&bar')).to.equal('?bar');
+			expect(qs.removeOne('foo', '?bar&foo')).to.equal('?bar');
+			expect(qs.removeOne('foo', 'http://www.example.com/?bar&foo')).to.equal('http://www.example.com/?bar');
+			expect(qs.removeOne('foo', 'http://www.example.com/?foo&bar')).to.equal('http://www.example.com/?bar');
 		});
 
 		it('should remove the \'?\' if there are no remaining QS keys', function() {
-			expect(qs.remove('foo', '')).to.equal('');
-			expect(qs.remove('foo', '?')).to.equal('');
-			expect(qs.remove('foo', '/?')).to.equal('/');
-			expect(qs.remove('foo', 'http://www.example.com/?foo')).to.equal('http://www.example.com/');
+			expect(qs.removeOne('foo', '')).to.equal('');
+			expect(qs.removeOne('foo', '?')).to.equal('');
+			expect(qs.removeOne('foo', '/?')).to.equal('/');
+			expect(qs.removeOne('foo', 'http://www.example.com/?foo')).to.equal('http://www.example.com/');
 		});
 	});
 
 
 	describe('removeMany', function(){
 		it('should remove keys and their values from a query string', function() {
-			expect(qs.remove(['foo'], '?foo=bar')).to.equal('');
-			expect(qs.remove(['foo','bar'], '?foo=bar')).to.equal('');
-			expect(qs.remove(['foo','bar'], '?foo=baz&bar=qux')).to.equal('');
-			expect(qs.remove(['foo'], '?foo&bar')).to.equal('?bar');
-			expect(qs.remove(['foo','bar'], '?bar&foo')).to.equal('');
-			expect(qs.remove(['foo','bar'], 'http://www.example.com/?bar&foo&baz')).to.equal('http://www.example.com/?baz');
-			expect(qs.remove(['foo','bar'], 'http://www.example.com/?baz&foo&bar')).to.equal('http://www.example.com/?baz');
+			expect(qs.removeMany(['foo'], '?foo=bar')).to.equal('');
+			expect(qs.removeMany(['foo','bar'], '?foo=bar')).to.equal('');
+			expect(qs.removeMany(['foo','bar'], '?foo=baz&bar=qux')).to.equal('');
+			expect(qs.removeMany(['foo'], '?foo&bar')).to.equal('?bar');
+			expect(qs.removeMany(['foo','bar'], '?bar&foo')).to.equal('');
+			expect(qs.removeMany(['foo','bar'], 'http://www.example.com/?bar&foo&baz')).to.equal('http://www.example.com/?baz');
+			expect(qs.removeMany(['foo','bar'], 'http://www.example.com/?baz&foo&bar')).to.equal('http://www.example.com/?baz');
 		});
 
 		it('should remove the \'?\' if there are no remaining QS keys', function() {
-			expect(qs.remove(['foo'], '')).to.equal('');
-			expect(qs.remove(['foo','bar'], '?')).to.equal('');
-			expect(qs.remove(['foo'], '/?')).to.equal('/');
-			expect(qs.remove(['foo','bar'], 'http://www.example.com/?foo')).to.equal('http://www.example.com/');
+			expect(qs.removeMany(['foo'], '')).to.equal('');
+			expect(qs.removeMany(['foo','bar'], '?')).to.equal('');
+			expect(qs.removeMany(['foo'], '/?')).to.equal('/');
+			expect(qs.removeMany(['foo','bar'], 'http://www.example.com/?foo')).to.equal('http://www.example.com/');
 		});
 	});
 
 
 	describe('removeAll', function(){
 		it('should remove all keys and their values from a query string', function() {
-			expect(qs.remove('?foo=bar')).to.equal('');
-			expect(qs.remove('?foo&bar')).to.equal('');
-			expect(qs.remove('?foo=baz&bar=qux')).to.equal('');
-			expect(qs.remove('/?bar&foo')).to.equal('/');
-			expect(qs.remove('http://www.example.com/?bar&foo&baz')).to.equal('http://www.example.com/');
-			expect(qs.remove('http://www.example.com/?baz=foo&bar')).to.equal('http://www.example.com/');
+			expect(qs.removeAll('?foo=bar')).to.equal('');
+			expect(qs.removeAll('?foo&bar')).to.equal('');
+			expect(qs.removeAll('?foo=baz&bar=qux')).to.equal('');
+			expect(qs.removeAll('/?bar&foo')).to.equal('/');
+			expect(qs.removeAll('http://www.example.com/?bar&foo&baz')).to.equal('http://www.example.com/');
+			expect(qs.removeAll('http://www.example.com/?baz=foo&bar')).to.equal('http://www.example.com/');
 		});
 	});
 
@@ -237,9 +240,9 @@ describe('TinyQueryString', function(){
 		});
 
 		it('should behave the same as removeAll', function() {
-			expect(qs.remove('')).to.deep.equal(qs.removeAll(''));
-			expect(qs.remove('?foo&bar')).to.deep.equal(qs.removeAll('?foo&bar'));
-			expect(qs.remove('/?foo=bar&baz=qux')).to.deep.equal(qs.removeAll('/?foo=bar&baz=qux'));
+			expect(qs.remove('', false)).to.deep.equal(qs.removeAll(''));
+			expect(qs.remove('?foo&bar', false)).to.deep.equal(qs.removeAll('?foo&bar'));
+			expect(qs.remove('/?foo=bar&baz=qux', false)).to.deep.equal(qs.removeAll('/?foo=bar&baz=qux'));
 		});
 	});
 });
