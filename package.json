@@ -4,7 +4,7 @@
   "description": "A really tiny URL query string utility",
   "main": "tinyQuery.js",
   "scripts": {
-    "test": "./node_modules/.bin/mocha test.js"
+    "test": "./node_modules/.bin/mocha test/index.js"
   },
   "repository": {
     "type": "git",

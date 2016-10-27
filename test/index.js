@@ -1,4 +1,4 @@
-const qs = require('./tinyQuery');
+const qs = require('../tinyQuery');
 const { assert, expect } = require('chai');
 
 const encodedString = 'http%3A%2F%2Fwww.example.com%2Fpage%2F%3Ff%C3%B6o%3Dbar%20%C3%AFs%20%C3%A1%20pr%C3%A9tty%20c%C3%B6%C3%B6l%20w%C4%93bsite!';
