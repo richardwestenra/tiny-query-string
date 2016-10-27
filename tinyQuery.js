@@ -92,7 +92,17 @@
       }.bind(this), setDefault(text));
     },
 
-    remove: function(name, text) {
+    remove: function() {
+      if (arguments.length === 1) {
+        return this.removeAll.apply(this, arguments);
+      } else if (typeof arguments[0] === 'object') {
+        return this.removeMany.apply(this, arguments);
+      } else {
+        return this.removeOne.apply(this, arguments);
+      }
+    },
+
+    removeOne: function(name, text) {
       text = setDefault(text).match(/([^\?]*)(\?*.*)/);
       if (!text) {
         return false;
@@ -103,6 +113,16 @@
           return d !== name && d.name !== name;
         }), text[1]);
       }
+    },
+
+    removeMany: function(arr, text) {
+      return arr.reduce(function(txt, d) {
+        return this.removeOne(d, txt);
+      }.bind(this), setDefault(text));
+    },
+
+    removeAll: function(text) {
+      return setDefault(text).split('?')[0];
     }
   };
 }));
