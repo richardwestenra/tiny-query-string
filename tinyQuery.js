@@ -32,6 +32,7 @@
     },
 
     getMany: function(arr, text) {
+      text = text || window.location.search;
       return arr.map(function(d) {
         return this.get(d, text);
       }.bind(this));
@@ -56,6 +57,7 @@
     },
 
     setMany: function(arr, text) {
+      text = text || window.location.search;
       return arr.reduce(function(text, d) {
         return this.set(d.name, d.value, text);
       }.bind(this), text);
