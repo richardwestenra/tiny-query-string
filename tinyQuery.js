@@ -25,17 +25,13 @@
   };
 
   return {
-    get: function(arg1, arg2) {
-      if (typeof arg1 === 'object') {
-        return this.getMany.apply(this, arguments);
-      } else if (!arg1 || arg2 === false) {
-        return this.getAll.apply(this, arguments);
-      } else {
-        return this.getOne.apply(this, arguments);
+    get: function(name, text) {
+      if (typeof name === 'object') {
+        return name.reduce(function(obj, key) {
+          obj[key] = this.getOne(key, setDefault(text));
+          return obj;
+        }.bind(this), {});
       }
-    },
-
-    getOne: function(name, text) {
       var match = setDefault(text).match( getRegex(name) );
       if (!match) {
         return false;
@@ -44,13 +40,6 @@
       } else {
         return true;
       }
-    },
-
-    getMany: function(arr, text) {
-      return arr.reduce(function(obj, key) {
-        obj[key] = this.getOne(key, setDefault(text));
-        return obj;
-      }.bind(this), {});
     },
 
     getAll: function(text) {
@@ -65,14 +54,20 @@
       }
     },
 
-    set: function(arg) {
-      return  (typeof arg === 'object') ?
-        this.setMany.apply(this, arguments) :
-        this.setOne.apply(this, arguments);
-    },
-
-    setOne: function(name, value, text) {
+    set: function(name, value, text) {
       text = setDefault(text);
+
+      if (Array.isArray(name)) {
+        return name.reduce(function(txt, d) {
+          return this.set(d, false, txt);
+        }.bind(this), text);
+
+      } else if (typeof name === 'object') {
+        return Object.keys(name).reduce(function(txt, key) {
+          return this.set(key, name[key], txt);
+        }.bind(this), text);
+      }
+
       var regex = getRegex(name),
         match = regex.exec(text),
         pair = value ? name + '=' + encodeURIComponent(value) : name;
@@ -86,28 +81,13 @@
       }
     },
 
-    setMany: function(values, text) {
-      if (Array.isArray(values)) {
-        return values.reduce(function(txt, d) {
-          return this.setOne(d, false, txt);
+    remove: function(name, text) {
+      if (typeof name === 'object') {
+        return name.reduce(function(txt, d) {
+          return this.removeOne(d, txt);
         }.bind(this), setDefault(text));
       }
-      return Object.keys(values).reduce(function(txt, key) {
-        return this.setOne(key, values[key], txt);
-      }.bind(this), setDefault(text));
-    },
-
-    remove: function(arg1, arg2) {
-      if (typeof arg1 === 'object') {
-        return this.removeMany.apply(this, arguments);
-      } else if (!arg1 || arg2 === false) {
-        return this.removeAll.apply(this, arguments);
-      } else {
-        return this.removeOne.apply(this, arguments);
-      }
-    },
-
-    removeOne: function(name, text) {
+      
       text = setDefault(text).match(/([^\?]*)(\?*.*)/);
       if (!text) {
         return false;
@@ -120,12 +100,6 @@
           });
         return this.setMany(remainingKeys, text[1]);
       }
-    },
-
-    removeMany: function(arr, text) {
-      return arr.reduce(function(txt, d) {
-        return this.removeOne(d, txt);
-      }.bind(this), setDefault(text));
     },
 
     removeAll: function(text) {
