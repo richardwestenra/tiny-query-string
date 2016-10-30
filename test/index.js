@@ -107,7 +107,8 @@ describe('TinyQueryString', function(){
 			expect(qs.setOne('foo', 'bar', 'http://www.example.com/')).to.equal('http://www.example.com/?foo=bar');
 		});
 
-		it('should add just the key name when the value is falsey', function() {
+		it('should add just the key name when the value is not a string/number', function() {
+			expect(qs.setOne('foo', true, '')).to.equal('?foo');
 			expect(qs.setOne('foo', null, '')).to.equal('?foo');
 			expect(qs.setOne('foo', false, '')).to.equal('?foo');
 			expect(qs.setOne('foo', '', '')).to.equal('?foo');
@@ -138,7 +139,7 @@ describe('TinyQueryString', function(){
 		it('should add multiple keys and their values', function() {
 			expect(qs.setMany({foo:'bar',baz:'qux'}, '')).to.equal('?foo=bar&baz=qux');
 			expect(qs.setMany({foo:123,baz:456}, '')).to.equal('?foo=123&baz=456');
-			expect(qs.setMany({foo:false,baz:true}, '')).to.equal('?foo&baz=true');
+			expect(qs.setMany({foo:false,baz:true}, '')).to.equal('?foo&baz');
 			expect(qs.setMany({foo:'bar',baz:'qux'}, 'http://www.example.com/')).to.equal('http://www.example.com/?foo=bar&baz=qux');
 		});
 

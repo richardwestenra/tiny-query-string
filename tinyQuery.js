@@ -74,15 +74,17 @@
     setOne: function(name, value, text) {
       text = setDefault(text);
       var regex = getRegex(name),
-        match = regex.exec(text),
-        pair = value ? name + '=' + encodeURIComponent(value) : name;
+        match = regex.exec(text);
+      if (value && (typeof value === 'string' || typeof value === 'number')) {
+        name = name + '=' + encodeURIComponent(value);
+      }
 
       if (!text.length || text.indexOf('?') < 0) {
-        return (text || '') + '?' + pair;
+        return (text || '') + '?' + name;
       } else if (match) {
-        return text.replace(regex, match[0].charAt(0) + pair);
+        return text.replace(regex, match[0].charAt(0) + name);
       } else {
-        return text + '&' + pair;
+        return text + '&' + name;
       }
     },
 
