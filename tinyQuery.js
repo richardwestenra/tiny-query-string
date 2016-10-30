@@ -20,15 +20,15 @@
 
   var setDefault = function(text) {
     return typeof text !== 'string' ? (
-      typeof window === 'undefined' ? '' : window.location.search
+      typeof window !== 'undefined' ? window.location.search : ''
     ) : text;
   };
 
   return {
-    get: function() {
-      if (typeof arguments[0] === 'object') {
+    get: function(arg1, arg2) {
+      if (typeof arg1 === 'object') {
         return this.getMany.apply(this, arguments);
-      } else if (arguments[1] === false) {
+      } else if (!arg1 || arg2 === false) {
         return this.getAll.apply(this, arguments);
       } else {
         return this.getOne.apply(this, arguments);
@@ -65,8 +65,8 @@
       }
     },
 
-    set: function() {
-      return  (typeof arguments[0] === 'object') ? 
+    set: function(arg) {
+      return  (typeof arg === 'object') ?
         this.setMany.apply(this, arguments) :
         this.setOne.apply(this, arguments);
     },
@@ -97,10 +97,10 @@
       }.bind(this), setDefault(text));
     },
 
-    remove: function() {
-      if (typeof arguments[0] === 'object') {
+    remove: function(arg1, arg2) {
+      if (typeof arg1 === 'object') {
         return this.removeMany.apply(this, arguments);
-      } else if (arguments[1] === false) {
+      } else if (!arg1 || arg2 === false) {
         return this.removeAll.apply(this, arguments);
       } else {
         return this.removeOne.apply(this, arguments);
