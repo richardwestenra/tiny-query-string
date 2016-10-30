@@ -19,7 +19,7 @@
   };
 
   var setDefault = function(text) {
-    return typeof text === 'undefined' ? (
+    return typeof text !== 'string' ? (
       typeof window === 'undefined' ? '' : window.location.search
     ) : text;
   };
@@ -47,20 +47,22 @@
     },
 
     getMany: function(arr, text) {
-      return arr.map(function(d) {
-        return this.getOne(d, setDefault(text));
-      }.bind(this));
+      return arr.reduce(function(obj, key) {
+        obj[key] = this.getOne(key, setDefault(text));
+        return obj;
+      }.bind(this), {});
     },
 
     getAll: function(text) {
       text = setDefault(text).match(/\?(.+)/);
       if (!text) {
-        return [];
+        return {};
+      } else {
+        var keys = text[1].split('&').map(function(pair) {
+          return pair.split('=')[0];
+        });
+        return this.getMany.call(this, keys, text[0]);
       }
-      return text[1].split('&').map(function(d) {
-        var s = d.split('=');
-        return s.length < 2 ? d : { name: s[0], value: s[1] };
-      });
     },
 
     set: function() {
@@ -84,11 +86,14 @@
       }
     },
 
-    setMany: function(arr, text) {
-      return arr.reduce(function(txt, d) {
-        return typeof d === 'object' ? 
-          this.setOne(d.name, d.value, txt) :
-          this.setOne(d, false, txt);
+    setMany: function(values, text) {
+      if (Array.isArray(values)) {
+        return values.reduce(function(txt, d) {
+          return this.setOne(d, false, txt);
+        }.bind(this), setDefault(text));
+      }
+      return Object.keys(values).reduce(function(txt, key) {
+        return this.setOne(key, values[key], txt);
       }.bind(this), setDefault(text));
     },
 
@@ -109,9 +114,11 @@
       } else if (!text[2].length) {
         return text[1];
       } else {
-        return this.setMany(this.getAll(text[2]).filter(function(d){
-          return d !== name && d.name !== name;
-        }), text[1]);
+        var remainingKeys = Object.keys(this.getAll(text[2]))
+          .filter(function(key){
+            return key !== name;
+          });
+        return this.setMany(remainingKeys, text[1]);
       }
     },
 

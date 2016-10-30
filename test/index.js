@@ -41,43 +41,36 @@ describe('TinyQueryString', function(){
 
 	describe('getMany', function(){
 		it('should retrieve multiple named values from a query string', function() {
-			expect(qs.getMany(['foo'], '?foo')).to.be.an('array');
-			expect(qs.getMany(['foo'], '?foo')).to.have.length(1);
-			expect(qs.getMany(['foo'], '?foo=bar')[0]).to.equal('bar');
-			expect(qs.getMany(['foo'], '?bar')[0]).to.not.be.true;
-			expect(qs.getMany(['foo'], 'http://www.example.com/page/?foo=bar')[0]).to.equal('bar');
-			expect(qs.getMany(['foo', 'baz'], '?foo=bar&baz=qux')[0]).to.equal('bar');
-			expect(qs.getMany(['foo', 'baz'], '?foo=bar&baz=qux')[1]).to.equal('qux');
-			expect(qs.getMany(['foo', 'baz'], '?foo=bar&quux=qux')[1]).to.not.be.true;
+			expect(qs.getMany(['foo'], '?foo')).to.be.an('object');
+			expect(qs.getMany(['foo'], '?foo=bar')).to.deep.equal({foo:'bar'});
+			expect(qs.getMany(['foo'], '?bar')).to.not.be.true;
+			expect(qs.getMany(['foo'], 'http://www.example.com/page/?foo=bar')).to.deep.equal({foo:'bar'});
+			expect(qs.getMany(['foo','baz'], '?foo=bar&baz=qux')).to.deep.equal({foo:'bar', baz:'qux'});
+			expect(qs.getMany(['foo','baz'], '?foo=bar&quux=qux')).to.deep.equal({foo:'bar', baz:false});
 		});
 		
 		it('should confirm whether multiple keys are present in a query string', function() {
-			expect(qs.getMany(['foo'], '?foo')[0]).to.be.true;
-			expect(qs.getMany(['foo'], '?bar')[0]).to.not.be.true;
-			expect(qs.getMany(['foo'], 'http://www.example.com/page/?foo&bar')[0]).to.be.true;
-			expect(qs.getMany(['foo', 'bar'], '?foo&bar')[0]).to.be.true;
-			expect(qs.getMany(['foo', 'bar'], '?foo&bar')[1]).to.be.true;
-			expect(qs.getMany(['foo', 'bar'], '?foo&baz')[1]).to.not.be.true;
+			expect(qs.getMany(['foo'], '?foo')).to.deep.equal({foo:true});
+			expect(qs.getMany(['foo'], '?bar')).to.deep.equal({foo:false});;
+			expect(qs.getMany(['foo'], 'http://www.example.com/page/?foo&bar')).to.deep.equal({foo:true});
+			expect(qs.getMany(['foo', 'bar'], '?foo&bar')).to.deep.equal({foo:true,bar:true});
+			expect(qs.getMany(['foo', 'bar'], '?foo&baz')).to.deep.equal({foo:true,bar:false});
 		});
 	});
 
 
 	describe('getAll', function(){
 		it('should retrieve all of the keys and values from a string', function() {
-			expect(qs.getAll('?foo&bar')[0]).to.equal('foo');
-			expect(qs.getAll('?foo&bar')[1]).to.equal('bar');
-			expect(qs.getAll('?foo=bar&baz=qux')[0].name).to.equal('foo');
-			expect(qs.getAll('?foo=bar&baz=qux')[0].value).to.equal('bar');
-			expect(qs.getAll('?foo=bar&baz=qux')[1].name).to.equal('baz');
-			expect(qs.getAll('?foo=bar&baz=qux')[1].value).to.equal('qux');
+			expect(qs.getAll('?foo&bar')).to.deep.equal({foo: true, bar: true});
+			expect(qs.getAll('?foo=bar&baz=qux')).to.deep.equal({foo:'bar', baz:'qux'});
 		});
 
-		it('should return an empty array when there are no QS keys/values', function() {
-			expect(qs.getAll('')).to.deep.equal([]);
-			expect(qs.getAll('/')).to.deep.equal([]);
-			expect(qs.getAll('?')).to.deep.equal([]);
-			expect(qs.getAll('http://www.example.com/page/')).to.deep.equal([]);
-			expect(qs.getAll('http://www.example.com/page/?')).to.deep.equal([]);
+		it('should return an empty object when there are no QS keys/values', function() {
+			expect(qs.getAll('')).to.deep.equal({});
+			expect(qs.getAll('/')).to.deep.equal({});
+			expect(qs.getAll('?')).to.deep.equal({});
+			expect(qs.getAll('http://www.example.com/page/')).to.deep.equal({});
+			expect(qs.getAll('http://www.example.com/page/?')).to.deep.equal({});
 		});
 	});
 
@@ -135,24 +128,23 @@ describe('TinyQueryString', function(){
 
 	describe('setMany', function(){
 		it('should add multiple keys when none exist', function() {
-			expect(qs.setMany([ {name:'foo'}, {name:'bar'} ], '')).to.equal('?foo&bar');
 			expect(qs.setMany(['foo', 'bar'], '')).to.equal('?foo&bar');
 			expect(qs.setMany([false, true], '')).to.equal('?false&true');
 			expect(qs.setMany([1, 0], '')).to.equal('?1&0');
 			expect(qs.setMany(['foo', 'bar'], 'http://www.example.com/')).to.equal('http://www.example.com/?foo&bar');
-			expect(qs.setMany([ {name:'foo'}, {name:'bar'} ], 'http://www.example.com/')).to.equal('http://www.example.com/?foo&bar');
+			expect(qs.setMany(['foo','bar'], 'http://www.example.com/')).to.equal('http://www.example.com/?foo&bar');
 		});
 
 		it('should add multiple keys and their values', function() {
-			expect(qs.setMany([ {name:'foo', value:'bar'}, {name:'baz', value:'qux'} ], '')).to.equal('?foo=bar&baz=qux');
-			expect(qs.setMany([ {name:'foo', value:123}, {name:'baz', value:456} ], '')).to.equal('?foo=123&baz=456');
-			expect(qs.setMany([ {name:'foo', value:false}, {name:'baz', value:true} ], '')).to.equal('?foo&baz=true');
-			expect(qs.setMany([ {name:'foo', value:'bar'}, {name:'baz', value:'qux'} ], 'http://www.example.com/')).to.equal('http://www.example.com/?foo=bar&baz=qux');
+			expect(qs.setMany({foo:'bar',baz:'qux'}, '')).to.equal('?foo=bar&baz=qux');
+			expect(qs.setMany({foo:123,baz:456}, '')).to.equal('?foo=123&baz=456');
+			expect(qs.setMany({foo:false,baz:true}, '')).to.equal('?foo&baz=true');
+			expect(qs.setMany({foo:'bar',baz:'qux'}, 'http://www.example.com/')).to.equal('http://www.example.com/?foo=bar&baz=qux');
 		});
 
 		it('should add multiple keys when some already exist', function() {
 			expect(qs.setMany(
-				[ {name:'foo', value:'bar'}, {name:'baz', value:'qux'} ], 
+				{foo:'bar',baz:'qux'}, 
 				'http://www.example.com/?corge=waldo'
 			)).to.equal('http://www.example.com/?corge=waldo&foo=bar&baz=qux');
 			expect(qs.setMany(['foo', 'bar'], '?baz&qux')).to.equal('?baz&qux&foo&bar');
@@ -170,16 +162,16 @@ describe('TinyQueryString', function(){
 			expect(qs.set(['foo'], '')).to.equal(qs.setMany(['foo'], ''));
 			expect(qs.set(['foo','bar'], '')).to.equal(qs.setMany(['foo','bar'], ''));
 			expect(
-				qs.setMany([ {name:'foo', value:'bar'}, {name:'baz', value:'qux'} ], '')
+				qs.set({foo:'bar',baz:'qux'}, '')
 			).to.equal(
-				qs.setMany([ {name:'foo', value:'bar'}, {name:'baz', value:'qux'} ], '')
+				qs.setMany({foo:'bar',baz:'qux'}, '')
 			);
 		});
 	});
 
 
 	describe('removeOne', function(){
-		it('should remove a keys and its values from a query string', function() {
+		it('should remove a key and its value from a query string', function() {
 			expect(qs.removeOne('foo', '?foo=bar')).to.equal('');
 			expect(qs.removeOne('foo', '?foo&bar')).to.equal('?bar');
 			expect(qs.removeOne('foo', '?bar&foo')).to.equal('?bar');
