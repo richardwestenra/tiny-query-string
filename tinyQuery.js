@@ -59,7 +59,7 @@
         return {};
       } else {
         var keys = text[1].split('&').map(function(pair) {
-          return pair.split('=')[0];
+          return pair.split('=')[0].toLowerCase();
         });
         return this.getMany.call(this, keys, text[0]);
       }
