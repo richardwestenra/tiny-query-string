@@ -1,0 +1,23 @@
+{
+  "name": "tiny-query-string",
+  "description": "A really tiny URL query string utility",
+  "main": "tinyQuery.js",
+  "authors": [
+    "Richard Westenra"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "query",
+    "string",
+    "tiny",
+    "query",
+    "string"
+  ],
+  "homepage": "https://github.com/richardwestenra/tiny-query-string",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test"
+  ]
+}
