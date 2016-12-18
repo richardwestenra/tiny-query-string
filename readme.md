@@ -6,12 +6,12 @@ A tiny (2kb minified) JS library for reading & writing URL query strings.
 
 #### NPM:
 ```
-npm install tiny-query --save
+npm install tiny-query-string --save
 ```
 
 #### Bower:
 ```
-bower install tiny-query --save
+bower install tiny-query-string --save
 ```
 
 ## Usage examples
