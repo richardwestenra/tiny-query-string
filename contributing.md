@@ -1,6 +1,6 @@
 # Contributing
 
-When contributing to this repository, please first discuss the change you wish to make via [issue](issues), [email](mailto:richard@richardwestenra.com) or [twitter](http://twitter.com/richardwestenra) before making a change.
+When contributing to this repository, please first discuss the change you wish to make via [issue](../../issues), [email](mailto:richard@richardwestenra.com) or [twitter](http://twitter.com/richardwestenra) before making a change.
 
 Please note the [code of conduct](#code-of-conduct), and follow it in all your interactions with the project.
 
@@ -16,7 +16,7 @@ Please note the [code of conduct](#code-of-conduct), and follow it in all your i
 
 ## Versioning
 
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/your/project/tags). 
+We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](../../tags). 
 
 
 ## Code of Conduct

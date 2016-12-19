@@ -137,4 +137,5 @@ Please read [contributing.md](contributing.md) for details on our code of conduc
 ## License
 
 Copyright (c) Richard Westenra
+
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
