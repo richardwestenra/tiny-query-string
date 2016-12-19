@@ -1,6 +1,6 @@
 {
   "name": "tiny-query-string",
-  "version": "0.0.2",
+  "version": "0.1.0",
   "description": "A really tiny URL query string utility",
   "main": "tinyQuery.js",
   "scripts": {

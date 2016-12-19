@@ -2,6 +2,9 @@
 
 A tiny (2kb minified) JS library for reading & writing URL query strings.
 
+[![Build Status](https://travis-ci.org/richardwestenra/tiny-query-string.svg?branch=master)](https://travis-ci.org/richardwestenra/tiny-query-string)
+[![License](https://img.shields.io/badge/license-MIT%20License-brightgreen.svg)](https://opensource.org/licenses/MIT)
+
 ## Installation
 
 #### NPM:
