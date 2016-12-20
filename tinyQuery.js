@@ -5,11 +5,11 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['tinyQuery'], factory);
+    define(['tiny-query-string'], factory);
   } else if (typeof module === 'object' && module.exports) {
     module.exports = factory();
   } else {
-    root.tinyQuery = factory();
+    root['tiny-query-string'] = factory();
   }
 }(this, function () {
   'use strict';
