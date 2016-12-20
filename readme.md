@@ -21,19 +21,19 @@ bower install tiny-query-string --save
 
 ## Usage examples
 ```
-const tinyQuery = require('tinyQuery');
+const tinyQS = require('tiny-query-string');
 
-tinyQuery.get('foo', 'example.com?foo=bar&baz'); // 'bar'
-tinyQuery.get(['foo', 'baz'], 'example.com?foo=bar&baz'); // {'foo':'bar', 'baz':true}
-tinyQuery.get('example.com?foo=bar&baz', false); // {'foo':'bar', 'baz':true}
+tinyQS.get('foo', 'example.com?foo=bar&baz'); // 'bar'
+tinyQS.get(['foo', 'baz'], 'example.com?foo=bar&baz'); // {'foo':'bar', 'baz':true}
+tinyQS.get('example.com?foo=bar&baz', false); // {'foo':'bar', 'baz':true}
 
-tinyQuery.set('foo', 'bar', 'example.com?baz'); // 'example.com?baz&foo=bar'
-tinyQuery.set(['foo', 'bar'], 'example.com?baz'); // 'example.com?baz&foo&bar'
-tinyQuery.set({'foo':123, 'bar':'qux'}, 'example.com?baz'); // 'example.com?baz&foo=123&bar=qux'
+tinyQS.set('foo', 'bar', 'example.com?baz'); // 'example.com?baz&foo=bar'
+tinyQS.set(['foo', 'bar'], 'example.com?baz'); // 'example.com?baz&foo&bar'
+tinyQS.set({'foo':123, 'bar':'qux'}, 'example.com?baz'); // 'example.com?baz&foo=123&bar=qux'
 
-tinyQuery.remove('foo', 'example.com?foo=bar&baz'); // 'example.com?bar'
-tinyQuery.remove(['foo', 'bar'], 'example.com?foo&bar&baz'); // 'example.com?baz'
-tinyQuery.remove('example.com?foo=bar&baz', false); // 'example.com'
+tinyQS.remove('foo', 'example.com?foo=bar&baz'); // 'example.com?bar'
+tinyQS.remove(['foo', 'bar'], 'example.com?foo&bar&baz'); // 'example.com?baz'
+tinyQS.remove('example.com?foo=bar&baz', false); // 'example.com'
 ```
 
 ## Documentation
@@ -49,8 +49,8 @@ tinyQuery.remove('example.com?foo=bar&baz', false); // 'example.com'
 - **name** (_string_): The key to search for.
 - **text** (_string_) [_optional_]: The URL text to search in.
 ```
-tinyQuery.getOne('foo', 'example.com?foo=bar'); // 'bar'
-tinyQuery.getOne('foo', 'example.com?foo'); // true
+tinyQS.getOne('foo', 'example.com?foo=bar'); // 'bar'
+tinyQS.getOne('foo', 'example.com?foo'); // true
 ```
 
 ##### .getMany( names [, text] )
@@ -59,17 +59,17 @@ tinyQuery.getOne('foo', 'example.com?foo'); // true
 - **names** (_array_): The keys to search for.
 - **text** (_string_) [_optional_]: The URL text to search in.
 ```
-tinyQuery.getMany(['foo', 'bar', 'baz'], 'example.com?foo=123&baz'); // { foo: '123', bar: false, baz: true }
+tinyQS.getMany(['foo', 'bar', 'baz'], 'example.com?foo=123&baz'); // { foo: '123', bar: false, baz: true }
 ```
 
 ##### .getAll( [text] )
 > Parse a URL and return all query-string values as an object.
 
-> **Note:** If using the `.get()` alias with a specific text argument, pass `false` as the second argument (e.g. `tinyQuery.get('example.com?foo', false)`).
+> **Note:** If using the `.get()` alias with a specific text argument, pass `false` as the second argument (e.g. `tinyQS.get('example.com?foo', false)`).
 
 - **text** (_string_) [_optional_]: The URL text to search in.
 ```
-tinyQuery.getAll('example.com?foo=bar&baz'); // { foo: 'bar', baz: true }
+tinyQS.getAll('example.com?foo=bar&baz'); // { foo: 'bar', baz: true }
 ```
 
 ### .set()
@@ -82,8 +82,8 @@ tinyQuery.getAll('example.com?foo=bar&baz'); // { foo: 'bar', baz: true }
 - **value** (_string|Boolean|number_): The corresponding value. If the value is a Boolean then only the key will be added.
 - **text** (_string_) [_optional_]: The text URL to add the key/value to.
 ```
-tinyQuery.setOne('foo', 'bar', 'example.com'); // 'example.com?foo=bar'
-tinyQuery.setOne('foo', true, 'example.com'); // 'example.com?foo'
+tinyQS.setOne('foo', 'bar', 'example.com'); // 'example.com?foo=bar'
+tinyQS.setOne('foo', true, 'example.com'); // 'example.com?foo'
 ```
 
 ##### .setMany( values [, text] )
@@ -92,8 +92,8 @@ tinyQuery.setOne('foo', true, 'example.com'); // 'example.com?foo'
 - **values** (_array|object_): The keys to add. Accepts an array of valueless keys, or an object literal of key/value pairs.
 - **text** (_string_) [_optional_]: The text URL to add the key/value to.
 ```
-tinyQuery.setMany(['foo', 'bar'], 'example.com'); // 'example.com?foo&bar'
-tinyQuery.setMany({foo: 'bar', baz: true}, 'example.com'); // 'example.com?foo=bar&baz'
+tinyQS.setMany(['foo', 'bar'], 'example.com'); // 'example.com?foo&bar'
+tinyQS.setMany({foo: 'bar', baz: true}, 'example.com'); // 'example.com?foo=bar&baz'
 ```
 
 ### .remove()
@@ -106,7 +106,7 @@ tinyQuery.setMany({foo: 'bar', baz: true}, 'example.com'); // 'example.com?foo=b
 - **name** (_string_): The key to remove.
 - **text** (_string_) [_optional_]: The URL to parse and remove a key from.
 ```
-tinyQuery.removeOne('foo', 'example.com?foo=bar&baz'); // 'example.com?baz'
+tinyQS.removeOne('foo', 'example.com?foo=bar&baz'); // 'example.com?baz'
 ```
 
 ##### .removeMany( names [, text] )
@@ -115,17 +115,17 @@ tinyQuery.removeOne('foo', 'example.com?foo=bar&baz'); // 'example.com?baz'
 - **names** (_array_): The keys to remove.
 - **text** (_string_) [_optional_]: The URL to parse and remove keys from.
 ```
-tinyQuery.removeMany(['foo', 'bar'], 'example.com?foo=123&bar&baz'); // 'example.com?baz'
+tinyQS.removeMany(['foo', 'bar'], 'example.com?foo=123&bar&baz'); // 'example.com?baz'
 ```
 
 ##### .removeAll( [text] )
 > Parse a URL and return all query-string values as an object.
 
-> **Note:** If using the `.remove()` alias with a specific text argument, pass `false` as the second argument (e.g. `tinyQuery.remove('example.com?foo', false)`).
+> **Note:** If using the `.remove()` alias with a specific text argument, pass `false` as the second argument (e.g. `tinyQS.remove('example.com?foo', false)`).
 
 - **text** (_string_) [_optional_]: The URL text to search in.
 ```
-tinyQuery.removeAll('example.com?foo=bar&baz'); // 'example.com'
+tinyQS.removeAll('example.com?foo=bar&baz'); // 'example.com'
 ```
 
 
