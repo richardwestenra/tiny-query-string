@@ -1,10 +1,10 @@
-const qs = require('../tinyQuery');
+const qs = require('../tiny-query-string');
 const { assert, expect } = require('chai');
 
 const encodedString = 'http%3A%2F%2Fwww.example.com%2Fpage%2F%3Ff%C3%B6o%3Dbar%20%C3%AFs%20%C3%A1%20pr%C3%A9tty%20c%C3%B6%C3%B6l%20w%C4%93bsite!';
 const decodedString = 'http://www.example.com/page/?föo=bar ïs á prétty cööl wēbsite!';
 
-describe('TinyQueryString', function(){
+describe('tiny-query-string', function(){
 
 	describe('getOne', function(){
 		it('should retrieve a named value from a query string', function() {

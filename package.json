@@ -1,11 +1,11 @@
 {
   "name": "tiny-query-string",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "A really tiny URL query string utility",
-  "main": "tinyQuery.js",
+  "main": "tiny-query-string.js",
   "scripts": {
     "test": "./node_modules/.bin/mocha test/index.js",
-    "build": "./node_modules/.bin/uglifyjs tinyQuery.js -o tinyQuery.min.js -m"
+    "build": "./node_modules/.bin/uglifyjs tiny-query-string.js -o tiny-query-string.min.js -m"
   },
   "repository": {
     "type": "git",
@@ -26,7 +26,7 @@
   "bugs": {
     "url": "https://github.com/richardwestenra/tiny-query-string/issues"
   },
-  "homepage": "http://richardwestenra.com/tiny-query-string/",
+  "homepage": "http://github.com/richardwestenra/tiny-query-string/",
   "devDependencies": {
     "chai": "^3.5.0",
     "mocha": "^3.1.2",
