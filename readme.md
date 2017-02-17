@@ -20,7 +20,7 @@ bower install tiny-query-string --save
 ```
 
 ## Usage examples
-```
+```js
 const tinyQS = require('tiny-query-string');
 
 tinyQS.get('foo', 'example.com?foo=bar&baz'); // 'bar'
@@ -48,7 +48,7 @@ tinyQS.remove('example.com?foo=bar&baz', false); // 'example.com'
 
 - **name** (_string_): The key to search for.
 - **text** (_string_) [_optional_]: The URL text to search in.
-```
+```js
 tinyQS.getOne('foo', 'example.com?foo=bar'); // 'bar'
 tinyQS.getOne('foo', 'example.com?foo'); // true
 ```
@@ -58,7 +58,7 @@ tinyQS.getOne('foo', 'example.com?foo'); // true
 
 - **names** (_array_): The keys to search for.
 - **text** (_string_) [_optional_]: The URL text to search in.
-```
+```js
 tinyQS.getMany(['foo', 'bar', 'baz'], 'example.com?foo=123&baz'); // { foo: '123', bar: false, baz: true }
 ```
 
@@ -68,7 +68,7 @@ tinyQS.getMany(['foo', 'bar', 'baz'], 'example.com?foo=123&baz'); // { foo: '123
 > **Note:** If using the `.get()` alias with a specific text argument, pass `false` as the second argument (e.g. `tinyQS.get('example.com?foo', false)`).
 
 - **text** (_string_) [_optional_]: The URL text to search in.
-```
+```js
 tinyQS.getAll('example.com?foo=bar&baz'); // { foo: 'bar', baz: true }
 ```
 
@@ -81,7 +81,7 @@ tinyQS.getAll('example.com?foo=bar&baz'); // { foo: 'bar', baz: true }
 - **name** (_string_): The key to add.
 - **value** (_string|Boolean|number_): The corresponding value. If the value is a Boolean then only the key will be added.
 - **text** (_string_) [_optional_]: The text URL to add the key/value to.
-```
+```js
 tinyQS.setOne('foo', 'bar', 'example.com'); // 'example.com?foo=bar'
 tinyQS.setOne('foo', true, 'example.com'); // 'example.com?foo'
 ```
@@ -91,7 +91,7 @@ tinyQS.setOne('foo', true, 'example.com'); // 'example.com?foo'
 
 - **values** (_array|object_): The keys to add. Accepts an array of valueless keys, or an object literal of key/value pairs.
 - **text** (_string_) [_optional_]: The text URL to add the key/value to.
-```
+```js
 tinyQS.setMany(['foo', 'bar'], 'example.com'); // 'example.com?foo&bar'
 tinyQS.setMany({foo: 'bar', baz: true}, 'example.com'); // 'example.com?foo=bar&baz'
 ```
@@ -105,7 +105,7 @@ tinyQS.setMany({foo: 'bar', baz: true}, 'example.com'); // 'example.com?foo=bar&
 
 - **name** (_string_): The key to remove.
 - **text** (_string_) [_optional_]: The URL to parse and remove a key from.
-```
+```js
 tinyQS.removeOne('foo', 'example.com?foo=bar&baz'); // 'example.com?baz'
 ```
 
@@ -114,7 +114,7 @@ tinyQS.removeOne('foo', 'example.com?foo=bar&baz'); // 'example.com?baz'
 
 - **names** (_array_): The keys to remove.
 - **text** (_string_) [_optional_]: The URL to parse and remove keys from.
-```
+```js
 tinyQS.removeMany(['foo', 'bar'], 'example.com?foo=123&bar&baz'); // 'example.com?baz'
 ```
 
@@ -124,14 +124,14 @@ tinyQS.removeMany(['foo', 'bar'], 'example.com?foo=123&bar&baz'); // 'example.co
 > **Note:** If using the `.remove()` alias with a specific text argument, pass `false` as the second argument (e.g. `tinyQS.remove('example.com?foo', false)`).
 
 - **text** (_string_) [_optional_]: The URL text to search in.
-```
+```js
 tinyQS.removeAll('example.com?foo=bar&baz'); // 'example.com'
 ```
 
 
 ## Contributing
 
-Please read [contributing.md](contributing.md) for details on our code of conduct, and the process for working on this project and submitting pull requests.
+Please read [contributing.md](contributing.md) for details on the code of conduct, and the process for working on this project and submitting pull requests.
 
 
 ## License
